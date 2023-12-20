@@ -2,6 +2,7 @@ package apriceshittest;
 
 
 import org.omg.PortableInterceptor.INACTIVE;
+import utils.TreeNode;
 
 import java.util.*;
 
@@ -12,40 +13,28 @@ import java.util.*;
  * @date 2023/08/08 21:04
  **/
 public class Main {
+
     public static void main(String[] args) {
-        new Main().minimumFuelCost(new int[][]{{3,1},{3,2},{1,0},{0,4},{0,5},{4,6}}, 2);
+        new Main().groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"});
     }
-    int n;
-    ArrayList<List<Integer>> edges;
-    int ans = 0;
-    int s;
-    public long minimumFuelCost(int[][] roads, int seats) {
-        n = roads.length;
-        edges = new ArrayList<>();
-        s = seats;
-        for (int i = 0; i <= n; i++) {
-            edges.add(new ArrayList<>());
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        int n = strs.length;
+        for (int i = 0; i < n; i++) {
+            int[] arr = new int[26];
+            for (int j = 0; j < strs[i].length(); j++) {
+                arr[strs[i].charAt(j) - 'a']++;
+            }
+            String s = Arrays.toString(arr);
+            List<String> orDefault = map.getOrDefault(s, new ArrayList<>());
+            orDefault.add(strs[i]);
+            map.put(s, orDefault);
         }
-        for (int i = 0; i < roads.length; i++) {
-            int[] road = roads[i];
-            edges.get(road[0]).add(road[1]);
-            edges.get(road[1]).add(road[0]);
+        ArrayList<List<String>> ans = new ArrayList<>();
+        for (Map.Entry<String, List<String>> e : map.entrySet()) {
+            ans.add(e.getValue());
         }
-        dfs(0, 0, s);
         return ans;
     }
-
-    //i 当前坐标，ss 剩余座位
-    void dfs (int i, int depth,int ss) {
-        if (edges.get(i).size() == 0) {
-            return;
-        }
-        for (Integer e : edges.get(i)) {
-            if (ss == 0) {
-                ans += depth;
-                dfs(e, depth + 1, s - 1);
-            }
-            dfs(e, depth + 1, ss - 1);
-        }
-    }
 }
+

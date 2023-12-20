@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
@@ -14,38 +14,41 @@ public class Main {
 
 
     public static void main(String[] args) {
-//        int re = 1;
-        int cnt = in.nextInt();
-
-        Main main = new Main();
-
-        for (int ri = 1; ri <= cnt; ri++) {
-            main.solve();
-        }
-
+        new Main().solve();
         out.flush();
     }
 
     public void solve() {
         int n = in.nextInt();
-        long k = in.nextLong();
-        int ans = 0;
-        for (int i = 0; i <= n; i++) {
-            int second = n;
-            int first = i;
-            boolean f = true;
-            for (int j = 0; j < k - 2; j++) {
-                int tmp = first;
-                first = second - first;
-                second = tmp;
-                f &= (first <= second);
-                f &= (Math.min(first, second) >= 0);
-                if (!f) break;
+        for (int i = 0; i < n; i++) {
+            int m = in.nextInt();
+            int[] arr = new int[m];
+            for (int j = 0; j < m; j++) {
+                arr[j] = in.nextInt();
             }
-            if (f) ans++;
+            f(arr);
         }
+
+    }
+
+    void f(int[] arr) {
+        int n = arr.length;
+        int[] suf = new int[n];
+        int cnt = 0;
+        for (int i = n - 2; i >= 0; i--) {
+            if (arr[i] >= arr[i + 1]) cnt++;
+            suf[i] = cnt;
+        }
+        int pre = 1;
+        int ans = cnt;
+        for (int i = 1; i < n - 1; i++) {
+            if (arr[i - 1] <= arr[i]) pre++;
+            ans = Math.min(ans, pre + suf[i + 1]);
+        }
+        ans = Math.min(ans, pre);
         out.println(ans);
     }
+
 
 
     static class InputReader {
