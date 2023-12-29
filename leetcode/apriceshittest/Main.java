@@ -15,24 +15,21 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        new Main().groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"});
+        new Main().minCost(new int[]{20,1,15}, 5);
     }
-    public List<List<String>> groupAnagrams(String[] strs) {
-        HashMap<String, List<String>> map = new HashMap<>();
-        int n = strs.length;
+
+    public long minCost(int[] nums, int x) {
+        int n = nums.length;
+        int[] res = new int[n];
+        Arrays.fill(res, Integer.MAX_VALUE);
+        long ans = Long.MAX_VALUE;
         for (int i = 0; i < n; i++) {
-            int[] arr = new int[26];
-            for (int j = 0; j < strs[i].length(); j++) {
-                arr[strs[i].charAt(j) - 'a']++;
+            long tmp = 0;
+            for (int j = 0; j < n; j++) {
+                res[j] = Math.min(res[j], nums[(j + i) % n]);
+                tmp += res[j];
             }
-            String s = Arrays.toString(arr);
-            List<String> orDefault = map.getOrDefault(s, new ArrayList<>());
-            orDefault.add(strs[i]);
-            map.put(s, orDefault);
-        }
-        ArrayList<List<String>> ans = new ArrayList<>();
-        for (Map.Entry<String, List<String>> e : map.entrySet()) {
-            ans.add(e.getValue());
+            ans = Math.min(ans, tmp + (long)i * x);
         }
         return ans;
     }
