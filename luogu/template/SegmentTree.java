@@ -27,7 +27,8 @@ public class SegmentTree {
             st.nextToken();
             A[i] = (int) st.nval;
         }
-        build(1, n, 1);//建树
+        build(1, n, 1);
+
         for (int i = 1; i <= m; i++) {
             st.nextToken();
             int t = (int) st.nval;
@@ -46,16 +47,7 @@ public class SegmentTree {
         pr.flush();//使用PrintWriter不要忘记flush
     }
 
-    private static void pushDown(int p, int l, int r) {
-        //这里我们使用push_down统一清楚标记
-        if (l == r) return;
-        int m = l + ((r - l) >> 1);
-        tree[p << 1] += mark[p] * (m - l + 1);
-        mark[p << 1] += mark[p];
-        tree[p << 1 | 1] += mark[p] * (r - m);
-        mark[p << 1 | 1] += mark[p];
-        mark[p] = 0;
-    }
+
 
     private static void build(int l, int r, int p) {
         if (l == r) {
@@ -68,6 +60,15 @@ public class SegmentTree {
         tree[p] = tree[p << 1] + tree[p << 1 | 1];
     }
 
+    private static void pushDown(int p, int l, int r) {
+        if (l == r) return;
+        int m = l + ((r - l) >> 1);
+        tree[p << 1] += mark[p] * (m - l + 1);
+        mark[p << 1] += mark[p];
+        tree[p << 1 | 1] += mark[p] * (r - m);
+        mark[p << 1 | 1] += mark[p];
+        mark[p] = 0;
+    }
     private static void update(int l, int r, int d, int p, int ll, int rr) {
         if (l <= ll && rr <= r) {
             tree[p] += d * (rr - ll + 1);
@@ -80,7 +81,6 @@ public class SegmentTree {
         if (r > m) update(l, r, d, p << 1 | 1, m + 1, rr);
         tree[p] = tree[p << 1] + tree[p << 1 | 1];
     }
-
     private static long query(int l, int r, int p, int ll, int rr) {
         if (l <= ll && rr <= r) return tree[p];
         pushDown(p, ll, rr);
