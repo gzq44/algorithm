@@ -15,23 +15,29 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        new Main().minCost(new int[]{20,1,15}, 5);
+        new Main().isHappy(19);
     }
 
-    public long minCost(int[] nums, int x) {
-        int n = nums.length;
-        int[] res = new int[n];
-        Arrays.fill(res, Integer.MAX_VALUE);
-        long ans = Long.MAX_VALUE;
-        for (int i = 0; i < n; i++) {
-            long tmp = 0;
-            for (int j = 0; j < n; j++) {
-                res[j] = Math.min(res[j], nums[(j + i) % n]);
-                tmp += res[j];
-            }
-            ans = Math.min(ans, tmp + (long)i * x);
+    public boolean isHappy(int n) {
+        int slow = n;
+        int fast = f(n);
+        while (slow != fast) {
+            slow = f(slow);
+            fast = f(fast);
+            if (fast == 1) return true;
+            fast = f(fast);
+            if (fast == 1) return true;
         }
-        return ans;
+        return fast == 1;
+    }
+
+    int f(int v) {
+        int res = 0;
+        while (v != 0) {
+            res += (v % 10) * (v % 10);
+            v /= 10;
+        }
+        return res;
     }
 }
 
