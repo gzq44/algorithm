@@ -6,46 +6,49 @@ public class Problem1921D {
 
     public static Scanner in = new Scanner();
     public static PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
-    static void sort(int[] a,int low,int high){
-        if(low<high){
-            int mid=low+(high-low)/2;
-            sort(a,low,mid);
-            sort(a,mid+1,high);
-            merge(a,low,mid,mid+1,high);
+
+    static void sort(int[] a, int low, int high) {
+        if (low < high) {
+            int mid = low + (high - low) / 2;
+            sort(a, low, mid);
+            sort(a, mid + 1, high);
+            merge(a, low, mid, mid + 1, high);
         }
     }
-    static void merge(int[] a,int l1,int h1,int l2,int h2){
-        int[] a1=new int[h1-l1+1];
-        int[] b1=new int[h2-l2+1];
-        for(int j=0;j<a1.length;j++){
-            a1[j]=a[j+l1];
+
+    static void merge(int[] a, int l1, int h1, int l2, int h2) {
+        int[] a1 = new int[h1 - l1 + 1];
+        int[] b1 = new int[h2 - l2 + 1];
+        for (int j = 0; j < a1.length; j++) {
+            a1[j] = a[j + l1];
         }
-        for(int j=0;j<b1.length;j++){
-            b1[j]=a[j+l2];
+        for (int j = 0; j < b1.length; j++) {
+            b1[j] = a[j + l2];
         }
-        int j=0;
-        int i=0;
-        while(j<a1.length && i<b1.length){
-            if(a1[j]>b1[i]){
-                a[l1]=b1[i];
+        int j = 0;
+        int i = 0;
+        while (j < a1.length && i < b1.length) {
+            if (a1[j] > b1[i]) {
+                a[l1] = b1[i];
                 i++;
-            }else{
-                a[l1]=a1[j];
+            } else {
+                a[l1] = a1[j];
                 j++;
             }
             l1++;
         }
-        while(j<a1.length){
-            a[l1]=a1[j];
+        while (j < a1.length) {
+            a[l1] = a1[j];
             j++;
             l1++;
         }
-        while(i<b1.length){
-            a[l1]=b1[i];
+        while (i < b1.length) {
+            a[l1] = b1[i];
             i++;
             l1++;
         }
     }
+
     public static void main(String[] args) {
         int n = in.nextInt();
         for (int i = 0; i < n; i++) {
@@ -70,6 +73,7 @@ public class Problem1921D {
     public void solve() {
 
     }
+
     static long f(int[] a1, int[] a2) {
         int n1 = a1.length;
         int n2 = a2.length;

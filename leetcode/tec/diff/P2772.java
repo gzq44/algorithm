@@ -1,7 +1,5 @@
 package tec.diff;
 
-import apriceshittest.Main;
-
 /**
  * 2772
  *

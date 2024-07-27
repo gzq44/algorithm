@@ -1,4 +1,4 @@
-package apriceshittest;
+package a.note;
 
 /**
  * ss

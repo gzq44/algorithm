@@ -1,4 +1,4 @@
-package apriceshittest;
+package a.note;
 
 import java.util.HashMap;
 

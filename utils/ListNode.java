@@ -1,9 +1,6 @@
 package utils;
 
 
-import java.util.ArrayDeque;
-import java.util.List;
-
 public class ListNode {
     public int val;
     public ListNode next;
