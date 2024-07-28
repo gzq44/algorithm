@@ -1,6 +1,7 @@
 package dp;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 动态规划题集
@@ -135,4 +136,32 @@ public class Main {
         return ans;
     }
 
+
+    /**
+     *
+     *      1187. 使数组严格递增
+     *
+     *      https://leetcode.cn/problems/make-array-strictly-increasing/description/
+     */
+    public int makeArrayIncreasing(int[] arr1, int[] arr2) {
+        int n = arr1.length;
+        int m = arr2.length;
+        return 0;
+    }
+
+    private int lowerBound(List<Integer> g, int target) {
+        int left = -1, right = g.size(); // 开区间 (left, right)
+        while (left + 1 < right) { // 区间不为空
+            // 循环不变量：
+            // nums[left] < target
+            // nums[right] >= target
+            int mid = left + (right - left) / 2;
+            if (g.get(mid) < target) {
+                left = mid; // 范围缩小到 (mid, right)
+            } else {
+                right = mid; // 范围缩小到 (left, mid)
+            }
+        }
+        return right; // 或者 left+1
+    }
 }
