@@ -1,7 +1,8 @@
 package dp;
 
-import java.util.Arrays;
-import java.util.List;
+import sun.nio.cs.ext.MacHebrew;
+
+import java.util.*;
 
 /**
  * 动态规划题集
@@ -140,28 +141,55 @@ public class Main {
     /**
      *
      *      1187. 使数组严格递增
-     *
+     *      选或不选
      *      https://leetcode.cn/problems/make-array-strictly-increasing/description/
      */
+    public static void main(String[] args) {
+        new Main().makeArrayIncreasing(new int[]{0,11,6,1,4,3}, new int[]{5,4,11,10,1,0});
+    }
+    HashMap<Integer, Integer> memo1[];
     public int makeArrayIncreasing(int[] arr1, int[] arr2) {
-        int n = arr1.length;
-        int m = arr2.length;
-        return 0;
+        Arrays.sort(arr2);
+        memo1 = new HashMap[arr1.length];
+        Arrays.setAll(memo1, e -> new HashMap<>());
+        int res = dfs1(0, -1, arr1, arr2);
+        return res == Integer.MAX_VALUE / 2 ? -1 : res;
     }
 
-    private int lowerBound(List<Integer> g, int target) {
-        int left = -1, right = g.size(); // 开区间 (left, right)
+    int dfs1(int i, int pre, int[] arr1, int[] arr2) {
+        if (i >= arr1.length) {
+            return 0;
+        }
+        if (memo1[i].containsKey(pre)) return memo1[i].get(pre);
+
+        int mn = Integer.MAX_VALUE / 2;
+
+        if (pre < arr1[i]) {
+            mn = Math.min(mn, dfs1(i + 1, arr1[i], arr1, arr2));
+        }
+
+        int b = lowerBound(arr2, pre + 1);
+        if (b != arr2.length) {
+            mn = Math.min(mn, dfs1(i + 1, arr2[b], arr1, arr2) + 1);
+        }
+
+        memo1[i].put(pre, mn);
+        return mn;
+    }
+
+    private int lowerBound(int[] g, int target) {
+        int left = 0, right = g.length; // 开区间 (left, right)
         while (left + 1 < right) { // 区间不为空
             // 循环不变量：
             // nums[left] < target
             // nums[right] >= target
             int mid = left + (right - left) / 2;
-            if (g.get(mid) < target) {
-                left = mid; // 范围缩小到 (mid, right)
+            if (g[mid] < target) {
+                left = mid + 1; // 范围缩小到 (mid, right)
             } else {
                 right = mid; // 范围缩小到 (left, mid)
             }
         }
-        return right; // 或者 left+1
+        return left; // 或者 left+1
     }
 }
