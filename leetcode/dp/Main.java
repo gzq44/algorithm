@@ -192,4 +192,18 @@ public class Main {
         }
         return left; // 或者 left+1
     }
+
+    /*
+    *
+    *   五、状态机 DP
+    *
+    *   一般定义 f[i][j] 表示前缀a[:i] 在状态 j 下的最优值。一般 j 都很小。代表题目是「买卖股票」系列。
+    *   https://leetcode.cn/problems/best-time-to-buy-and-sell-stock
+    *   https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii
+    *   https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii
+    *   https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv
+    *
+    * */
+
+
 }
