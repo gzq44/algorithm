@@ -1,7 +1,5 @@
 package dp;
 
-import sun.nio.cs.ext.MacHebrew;
-
 import java.util.*;
 
 /**
@@ -10,7 +8,7 @@ import java.util.*;
  * @author gzq44
  * @date 2024/07/27 17:26
  **/
-public class Main {
+public class DPMain {
 
     /**
      *
@@ -34,9 +32,6 @@ public class Main {
      *      https://leetcode.cn/problems/maximum-height-by-stacking-cuboids/description/
      *
      */
-//    public static void main(String[] args) {
-//        new Main().maxHeight(new int[][]{{7,11,17},{7,17,11},{11,7,17},{11,17,7},{17,7,11},{17,11,7}});
-//    }
     public int maxHeight(int[][] cuboids) {
         int n = cuboids.length;
         for (int[] cuboid : cuboids) {
@@ -144,9 +139,6 @@ public class Main {
      *      选或不选
      *      https://leetcode.cn/problems/make-array-strictly-increasing/description/
      */
-    public static void main(String[] args) {
-        new Main().makeArrayIncreasing(new int[]{0,11,6,1,4,3}, new int[]{5,4,11,10,1,0});
-    }
     HashMap<Integer, Integer> memo1[];
     public int makeArrayIncreasing(int[] arr1, int[] arr2) {
         Arrays.sort(arr2);
@@ -193,6 +185,56 @@ public class Main {
         return left; // 或者 left+1
     }
 
+    public static void main(String[] args) {
+        new DPMain().minOperations(new int[]{6,4,8,1,3,2}, new int[]{4,7,6,2,3,8,6,1});
+    }
+    /**
+     *  https://leetcode.cn/problems/minimum-operations-to-make-a-subsequence/description/
+     *  target 元素均不同
+     *  类似定义为target中的上升序列
+     *
+     * @param target
+     * @param arr
+     * @return
+     */
+    public int minOperations(int[] target, int[] arr) {
+        int n = arr.length;
+        Map<Integer, Integer> map = new HashMap<>();
+
+        int m = target.length;
+        for (int i = 0; i < m; i++) {
+            map.put(target[i], i);
+        }
+        List<Integer> g = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            int v = arr[i];
+            if (!map.containsKey(v)) continue;
+            int idx = lowerBound(g, map.get(v), map);
+            if (idx == g.size()) {
+                g.add(v);
+            } else {
+                g.set(idx, v);
+            }
+        }
+        return m - g.size();
+    }
+
+    private int lowerBound(List<Integer> g, int target, Map<Integer, Integer> map) {
+        int left = -1, right = g.size(); // 开区间 (left, right)
+        while (left + 1 < right) { // 区间不为空
+            // 循环不变量：
+            // nums[left] < target
+            // nums[right] >= target
+            int mid = left + (right - left) / 2;
+            if (map.get(g.get(mid)) < target) {
+                left = mid; // 范围缩小到 (mid, right)
+            } else {
+                right = mid; // 范围缩小到 (left, mid)
+            }
+        }
+        return right; // 或者 left+1
+    }
+
     /*
     *
     *   五、状态机 DP
@@ -204,6 +246,59 @@ public class Main {
     *   https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv
     *
     * */
+
+    /**
+     *
+     *      188. 买卖股票的最佳时机 IV
+     *
+     *      https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv
+     */
+    int[] prices;
+    int[][] memo;
+    public int maxProfit(int k, int[] _prices) {
+        int n = _prices.length;
+        prices = _prices;
+        memo = new int[n][k];
+        for (int[] m : memo) Arrays.fill(m, -1);
+        return dfs(n - 1, k, 0);
+    }
+
+    int dfs(int i, int j, int h) {
+        if (i < 0) return Integer.MIN_VALUE;
+        if (memo[i][j] != -1) return memo[i][j];
+
+        if (h == 1) return memo[i][j] = Math.max(dfs(i - 1, j, h), dfs(i - 1, j - 1, 0) + prices[i]);
+        return memo[i][j] = Math.max(dfs(i - 1, j, h), dfs(i - 1, j, 1) - prices[i]);
+    }
+
+
+    /**
+     *
+     *  https://leetcode.cn/problems/find-all-possible-stable-binary-arrays-ii/
+     *
+     * @param zero
+     * @param one
+     * @param limit
+     * @return
+     */
+    public int numberOfStableArrays(int zero, int one, int limit) {
+
+        int MOD = (int)1e9 + 7;
+        int[][][] f = new int[zero + 1][one + 1][limit];
+        for (int i = 0; i <= Math.min(limit, zero); i++) {
+            f[i][0][0] = 1;
+        }
+        for (int j = 1; j <= Math.min(limit, one); j++) {
+            f[0][j][1] = 1;
+        }
+        for (int i = 0; i < zero; i++) {
+            for (int j = 0; j < one; j++) {
+                f[i + 1][j + 1][0] = (int)(((long)f[i][j + 1][0] + f[i + 1][j][1] + (MOD - (limit < i ? f[i - 1 - limit][j + 1][1] : 0))) % MOD);
+                f[i + 1][j + 1][1] = (int)(((long)f[i][j + 1][0] + f[i + 1][j][1] + (MOD - (limit < j ? f[i + 1][j - 1 - limit][0] : 0))) % MOD);
+            }
+        }
+        return f[zero][one][0] + f[zero][one][1];
+    }
 
 
 }
