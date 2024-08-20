@@ -1,4 +1,4 @@
-package dp;
+package leetcode.dp;
 
 import java.util.*;
 
@@ -272,10 +272,107 @@ public class DPMain {
     }
 
 
+    public int checkRecord(int _n) {
+        n = _n;
+        memo2 = new int[n][3][2];
+        for (int[][] mm : memo2) {
+            for (int[] m : mm) {
+                Arrays.fill(m, -1);
+            }
+        }
+        return (int) dfs2(0, 0, 0);
+    }
+    int mod = (int)1e9 + 7;
+    int n;
+    int[][][] memo2;
+    long dfs2(int i, int cntl, int cnta) {
+        if (i == n) {
+            return (cnta < 2 && cntl < 3) ? 1 : 0;
+        }
+        if (memo2[i][cntl][cnta] != -1) return memo2[i][cntl][cnta];
+        long res = 0;
+        res = (res + dfs2(i + 1, 0, cnta)) % mod;
+        if (cntl < 3) res = (res + dfs2(i + 1, cntl + 1, cnta)) % mod;
+        if (cnta < 1) res = (res + dfs2(i + 1, 0, cnta + 1)) % mod;
+        return res;
+    }
+
+    /**
+     *
+     * https://leetcode.cn/problems/get-the-maximum-score/
+     * 1537. 最大得分
+     * 你有两个 有序 且数组内元素互不相同的数组 nums1 和 nums2 。
+     *
+     * 一条 合法路径 定义如下：
+     *
+     * 1、选择数组 nums1 或者 nums2 开始遍历（从下标 0 处开始）。
+     * 2、从左到右遍历当前数组。
+     * 3、如果你遇到了 nums1 和 nums2 中都存在的值，那么你可以切换路径到另一个数组对应数字处继续遍历（但在合法路径中重复数字只会被统计一次）。
+     * 4、得分 定义为合法路径中不同数字的和。
+     *
+     * 请你返回 所有可能 合法路径 中的最大得分。由于答案可能很大，请你将它对 10^9 + 7 取余后返回。
+     *
+     * @param nums1
+     * @param nums2
+     * @return
+     */
+    public int maxSum(int[] nums1, int[] nums2) {
+        int mod = (int)1e9 + 7;
+        int n = nums1.length;
+        int m = nums2.length;
+        int[] f = new int[n + 1];
+        int[] g = new int[m + 1];
+        int i = 0;
+        int j = 0;
+        while (i < n || j < m) {
+            if (i < n && j < m) {
+                if (nums1[i] < nums2[j]) {
+                    f[i + 1] = f[i] + nums1[i++];
+                    f[i + 1] %= mod;
+                } else if (nums1[i] > nums2[j]) {
+                    g[j + 1] = g[j] + nums2[j++];
+                    g[j + 1] %= mod;
+                } else {
+                    f[i + 1] = g[j + 1] = (Math.max(f[i], g[i]) + nums1[i]) % mod;
+                }
+            } else if (i < n) {
+                f[i + 1] = f[i] + nums1[i++];
+                f[i + 1] %= mod;
+            } else if (j < m) {
+                g[j + 1] = g[j] + nums2[j++];
+                g[j + 1] %= mod;
+            }
+        }
+        return Math.max(f[n], g[m]);
+    }
+
+    /**
+     *
+     * @param _k
+     * @return
+     */
+    public int waysToReachStair(int _k) {
+        k = _k;
+        return dfs3(1, 0, 0, new HashMap<Long, Integer>());
+    }
+
+    int k;
+    //第i个位置，总共跳了j次
+    int dfs3(int i, int j, int hasBack, Map<Long, Integer> memo) {
+        if (i > k + 1) return 0;
+        Long m = (long) i << 32 | j << 1 | hasBack;
+        if (memo.containsKey(m)) return memo.get(m);
+        long res = i == k ? 1 : 0;
+        if (hasBack == 0) res = res + dfs3(i - 1, j, 1, memo);
+        long next =  (long) i + (long) Math.pow(2, j);
+        if (next < k) res = res + dfs3((int) (i + Math.pow(2, j)), j + 1, 0, memo);
+        return (int) res;
+    }
+
     /**
      *
      *  https://leetcode.cn/problems/find-all-possible-stable-binary-arrays-ii/
-     *
+     *  rating 2700 very hard
      * @param zero
      * @param one
      * @param limit
